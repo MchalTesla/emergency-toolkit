@@ -1,0 +1,8 @@
+--- /tmp/rfxn.yara      2020-08-13 11:31:17.693340389 +0100
++++ /tmp/rfxn.yara.mod  2020-08-13 07:50:16.430360216 +0100
+@@ -429 +429 @@
+                $ = /\/gate.php\?token=.{,10}&host=/
++         $re =/\/gate.php\?token=.{,10}&host=/ nocase
+@@ -450 +450 @@
+-404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found
++//404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found404: Not Found

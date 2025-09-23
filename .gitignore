@@ -1,0 +1,3 @@
+vendor/clamav/db/*.cvd
+tools/python/bin/python3.11
+tools/python/lib/libpython3.11.so.1.0

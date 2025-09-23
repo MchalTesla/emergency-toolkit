@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# 解析工具箱根目录（bin/ 下）
+ROOT_DIR="${ROOT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)}"
+
+# 选择 Python 解释器：优先本地 venv，其次 tools 下的便携 Python，最后系统 python3
+PY=""
+if [[ -x "${ROOT_DIR}/tools/loki_venv/bin/python3" ]]; then
+  PY="${ROOT_DIR}/tools/loki_venv/bin/python3"
+else
+  if [[ -x "${ROOT_DIR}/bin/python3" && "${0}" != "${ROOT_DIR}/bin/python3" ]]; then
+    PY="${ROOT_DIR}/bin/python3"
+  fi
+  if [[ -z "${PY:-}" ]]; then
+    for p in "${ROOT_DIR}"/tools/python*/bin/python3 "${ROOT_DIR}"/tools/*/bin/python3 "${ROOT_DIR}/tools/python3"; do
+      [[ -x "$p" ]] && { PY="$p"; break; }
+    done
+  fi
+  if [[ -z "${PY:-}" ]]; then
+    PY="$(command -v python3 || true)"
+  fi
+fi
+
+if [[ -z "${PY:-}" ]]; then
+  echo "[bin/py] 未找到 python3，可在 tools/ 下放置便携 Python 或安装系统 python3" >&2
+  exit 1
+fi
+
+# 注入离线依赖目录（ensure_python3_and_loki 的 --target 方案）
+PYTHONPATH_PRE=""
+if [[ -d "${ROOT_DIR}/tools/pydeps" ]]; then
+  PYTHONPATH_PRE="${ROOT_DIR}/tools/pydeps"
+fi
+if [[ -d "${ROOT_DIR}/tools/pyshims" ]]; then
+  if [[ -n "${PYTHONPATH_PRE}" ]]; then
+    PYTHONPATH_PRE="${ROOT_DIR}/tools/pyshims:${PYTHONPATH_PRE}"
+  else
+    PYTHONPATH_PRE="${ROOT_DIR}/tools/pyshims"
+  fi
+fi
+if [[ -n "${PYTHONPATH_PRE}" ]]; then
+  export PYTHONPATH="${PYTHONPATH_PRE}:${PYTHONPATH:-}"
+fi
+
+exec "${PY}" "$@"
+#!/usr/bin/env bash
+set -euo pipefail
+DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="${DIR}/.."
+
+# 优先使用本地 venv
+if [[ -x "${ROOT_DIR}/tools/loki_venv/bin/python3" ]]; then
+  PY="${ROOT_DIR}/tools/loki_venv/bin/python3"
+else
+  # 其次 tools/python*/bin/python3 或 tools/*/bin/python3
+  PY=""
+  for c in "${ROOT_DIR}/tools"/python*/bin/python3 "${ROOT_DIR}/tools"/*/bin/python3; do
+    [[ -x "$c" ]] && { PY="$c"; break; }
+  done
+  [[ -z "$PY" ]] && PY="python3"
+fi
+
+# 注入离线依赖路径（若存在）
+if [[ -d "${ROOT_DIR}/tools/pydeps" ]]; then
+  export PYTHONPATH="${ROOT_DIR}/tools/pydeps:${PYTHONPATH:-}"
+fi
+
+exec "$PY" "$@"

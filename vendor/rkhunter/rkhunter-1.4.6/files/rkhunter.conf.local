@@ -1,0 +1,4 @@
+# Local overrides for portable run
+TMPDIR=/Users/fgp/Downloads/EmergencyToolkit/rkhunter/rkhunter-1.4.6/files
+DBDIR=/Users/fgp/Downloads/EmergencyToolkit/rkhunter/rkhunter-1.4.6/files
+SCRIPTDIR=/Users/fgp/Downloads/EmergencyToolkit/rkhunter/rkhunter-1.4.6/files

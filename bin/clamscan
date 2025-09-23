@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Wrapper to run bundled clamscan with its local libs without polluting global env.
+set -euo pipefail
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
+BIN="$ROOT_DIR/vendor/clamav/bin/clamscan"
+LIB="$ROOT_DIR/vendor/clamav/lib"
+if [[ ! -x "$BIN" ]]; then
+  echo "[!] clamscan 不存在：$BIN" >&2
+  exit 127
+fi
+# Prefer local loader if present
+if [[ -x "$LIB/ld-linux-x86-64.so.2" ]]; then
+  exec "$LIB/ld-linux-x86-64.so.2" --library-path "$LIB" "$BIN" "$@"
+else
+  env LD_LIBRARY_PATH="$LIB:${LD_LIBRARY_PATH:-}" "$BIN" "$@"
+fi
