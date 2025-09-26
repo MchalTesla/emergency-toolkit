@@ -87,19 +87,20 @@ Emergency Toolkit 是一个面向 Linux x86_64 服务器环境的应急响应工
 
 1. **下载工具箱**：
    ```bash
-   git clone https://github.com/MchalTesla/emergency-toolkit.git
-   cd emergency-toolkit
+   wget https://github.com/MchalTesla/emergency-toolkit/releases/download/v1.0.0/emergency-toolkit.tar.gz
    ```
 
 2. **部署到目标主机**：
    ```bash
    # 从本地复制到远程主机
-   scp -r emergency-toolkit user@target-host:/opt/
+   scp emergency-toolkit.tar.gz user@target-host:/opt/
    ssh user@target-host
-   cd /opt/emergency-toolkit
+   cd /opt
+   tar -xvf emergency-toolkit.tar.gz
+   cd EmergencyToolkit
 
    # 设置执行权限
-   chmod +x run.sh etk.sh clamav/run_scan.sh
+   chmod +x run.sh etk.sh
    ```
 
 3. **初始化运行**：
@@ -365,19 +366,20 @@ Emergency Toolkit is a lightweight security toolkit designed specifically for Li
 
 1. **Download the Toolkit**:
    ```bash
-   git clone https://github.com/MchalTesla/emergency-toolkit.git
-   cd emergency-toolkit
+   wget https://github.com/MchalTesla/emergency-toolkit/releases/download/v1.0.0/emergency-toolkit.tar.gz
    ```
 
 2. **Deploy to Target Host**:
    ```bash
    # Copy from local to remote host
-   scp -r emergency-toolkit user@target-host:/opt/
+   scp emergency-toolkit.tar.gz user@target-host:/opt/
    ssh user@target-host
-   cd /opt/emergency-toolkit
+   cd /opt
+   tar -xvf emergency-toolkit.tar.gz
+   cd EmergencyToolkit
 
    # Set execution permissions
-   chmod +x run.sh etk.sh clamav/run_scan.sh
+   chmod +x run.sh etk.sh
    ```
 
 3. **Initialize and Run**:
